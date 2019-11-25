@@ -241,8 +241,8 @@ class App extends Component {
         const option = {
             backgroundColor: '#404a59',
             title : {
-                text: '模拟迁徙',
-                subtext: '数据纯属虚构',
+                text: 'Train Stations',
+                subtext: 'CSE184 final project',
                 left: 'center',
                 textStyle : {
                     color: '#fff'
@@ -263,6 +263,8 @@ class App extends Component {
             },
             geo: {
                 map: 'china',
+                center:[121.4737,31.2304],
+                zoom:5,
                 label: {
                     emphasis: {
                         show: false
@@ -299,7 +301,7 @@ class App extends Component {
         return (
           <div className='examples'>
             <div className='parent'>
-              <label> render a airport chart. </label>
+              
               <ReactEcharts
                 ref = {(e) => {this.echarts_react = e;}}
                 option={this.getOption()}
