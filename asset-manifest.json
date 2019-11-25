@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/howardng940990575/CSE184-Final-Project-Railroad-Travel-React/static/css/main.b100e6da.chunk.css",
-    "main.js": "/howardng940990575/CSE184-Final-Project-Railroad-Travel-React/static/js/main.75721c37.chunk.js",
-    "main.js.map": "/howardng940990575/CSE184-Final-Project-Railroad-Travel-React/static/js/main.75721c37.chunk.js.map",
-    "runtime-main.js": "/howardng940990575/CSE184-Final-Project-Railroad-Travel-React/static/js/runtime-main.3548571a.js",
-    "runtime-main.js.map": "/howardng940990575/CSE184-Final-Project-Railroad-Travel-React/static/js/runtime-main.3548571a.js.map",
-    "static/js/2.08e6acaf.chunk.js": "/howardng940990575/CSE184-Final-Project-Railroad-Travel-React/static/js/2.08e6acaf.chunk.js",
-    "static/js/2.08e6acaf.chunk.js.map": "/howardng940990575/CSE184-Final-Project-Railroad-Travel-React/static/js/2.08e6acaf.chunk.js.map",
-    "index.html": "/howardng940990575/CSE184-Final-Project-Railroad-Travel-React/index.html",
-    "precache-manifest.249692f395f378cf49abcd1257243831.js": "/howardng940990575/CSE184-Final-Project-Railroad-Travel-React/precache-manifest.249692f395f378cf49abcd1257243831.js",
-    "service-worker.js": "/howardng940990575/CSE184-Final-Project-Railroad-Travel-React/service-worker.js",
-    "static/css/main.b100e6da.chunk.css.map": "/howardng940990575/CSE184-Final-Project-Railroad-Travel-React/static/css/main.b100e6da.chunk.css.map",
-    "static/media/logo.svg": "/howardng940990575/CSE184-Final-Project-Railroad-Travel-React/static/media/logo.25bf045c.svg"
+    "main.css": "/CSE184-Final-Project-Railroad-Travel-React/static/css/main.b100e6da.chunk.css",
+    "main.js": "/CSE184-Final-Project-Railroad-Travel-React/static/js/main.f65fe5e8.chunk.js",
+    "main.js.map": "/CSE184-Final-Project-Railroad-Travel-React/static/js/main.f65fe5e8.chunk.js.map",
+    "runtime-main.js": "/CSE184-Final-Project-Railroad-Travel-React/static/js/runtime-main.88db8aaa.js",
+    "runtime-main.js.map": "/CSE184-Final-Project-Railroad-Travel-React/static/js/runtime-main.88db8aaa.js.map",
+    "static/js/2.08e6acaf.chunk.js": "/CSE184-Final-Project-Railroad-Travel-React/static/js/2.08e6acaf.chunk.js",
+    "static/js/2.08e6acaf.chunk.js.map": "/CSE184-Final-Project-Railroad-Travel-React/static/js/2.08e6acaf.chunk.js.map",
+    "index.html": "/CSE184-Final-Project-Railroad-Travel-React/index.html",
+    "precache-manifest.2b07ff1209ab6aae55c15388c9fdf90d.js": "/CSE184-Final-Project-Railroad-Travel-React/precache-manifest.2b07ff1209ab6aae55c15388c9fdf90d.js",
+    "service-worker.js": "/CSE184-Final-Project-Railroad-Travel-React/service-worker.js",
+    "static/css/main.b100e6da.chunk.css.map": "/CSE184-Final-Project-Railroad-Travel-React/static/css/main.b100e6da.chunk.css.map",
+    "static/media/logo.svg": "/CSE184-Final-Project-Railroad-Travel-React/static/media/logo.25bf045c.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.3548571a.js",
+    "static/js/runtime-main.88db8aaa.js",
     "static/js/2.08e6acaf.chunk.js",
     "static/css/main.b100e6da.chunk.css",
-    "static/js/main.75721c37.chunk.js"
+    "static/js/main.f65fe5e8.chunk.js"
   ]
 }
