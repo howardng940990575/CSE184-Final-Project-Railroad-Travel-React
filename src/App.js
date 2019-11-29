@@ -12,12 +12,16 @@ class App extends Component {
         var jiangsu = jiangsu_station
 
         this.state = {
+            budget: '',
+            travelTime: '',
             allStations: [],
-            shanghainan_all:[],
+            shanghainan_all: [],
             shanghainan_hangzhou: [{}],
             value: [{}],
         }
-        
+        this.handleBudgetChange = this.handleBudgetChange.bind(this);
+        this.handleTravelTimeChange = this.handleTravelTimeChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
         for (var i = 0; i < Object.keys(shanghai.name).length; i++) {
             this.state.allStations.push(shanghai.name[i].replace(" Railway Station", ""))
             this.state.value.push({ name: shanghai.name[i].replace(" Railway Station", ""), value: [shanghai.maps_y[i], shanghai.maps_x[i]] })
@@ -31,17 +35,17 @@ class App extends Component {
             this.state.value.push({ name: jiangsu.name[i].replace(" Railway Station", ""), value: [jiangsu.maps_y[i], jiangsu.maps_x[i]] })
         }
         var tf = true
-        this.state.allStations.forEach(arrivalStation=>{
+        this.state.allStations.forEach(arrivalStation => {
             var all = []
             var min = 150
 
-            for (var i = 300; i > min ; i--) {
+            for (var i = 300; i > min; i--) {
                 all.push({ price: i, time: i })
             }
-            if(tf){
+            if (tf) {
                 all.push({ price: 149, time: 149 })
             }
-            this.state.shanghainan_all.push({toStation:arrivalStation,data:all})
+            this.state.shanghainan_all.push({ toStation: arrivalStation, data: all })
             tf = !tf
         })
         // for (var i = 0; i < 200 ; i++) {
@@ -53,9 +57,22 @@ class App extends Component {
         //console.log("shanghai"+this.state.value)
 
     }
-    calculateStations(departureStation) {
+    calculateStations(departureStation) {//用户点击了出发城市，触发这个function
         //console.log(this.state.shanghainan_all)
-        var reachableStations = [{}]
+        var reachableStations = [{}]    //根据计算预算和时间后可以到达的城市
+        // var departureStation_to_allStations = allStations_to_allStations.find(x=>x.id == departureStation) //从所有站到所有站点中，找出用户点击的出发站到所有站的数据
+        // this.state.allStations.forEach(arrivalStation =>{//游历所有站
+        //     var stationCoords = this.state.value.find(x => x.name == arrivalStation)//取出当前游历到的station的坐标数据
+        //     var departureStation_to_arrivalStation = departureStation_to_allStations.find(x=>x.id == arrivalStation)//从出发站到所有站的数据中，找出出发站到当前游历到的站的数据
+        //     departureStation_to_arrivalStation.data.forEach(item =>{//游历每个车次
+        //         if (item.price < budget && item.time < travelTime) { //如果价钱低于预算且需时低于旅游时间
+        //             reachableStations.push({ name: stationCoords.name, value: stationCoords.value })//把当前station的坐标数据push到可到达城市列表里
+        //         }
+        //     })
+        // })
+        // this.setState({ value: reachableStations })//最后更新地图上显示的点
+
+
         this.state.allStations.forEach(arrivalStation => {
             //console.log(departureStation, arrivalStation)
             var stationCoords = this.state.value.find(x => x.name == arrivalStation)
@@ -270,7 +287,7 @@ class App extends Component {
                             formatter: '{b}'
                         }
                     },
-                    symbolSize: 6,
+                    symbolSize: 10,
                     itemStyle: {
                         normal: {
                             color: color[i]
@@ -343,14 +360,41 @@ class App extends Component {
             console.log({ error })
         }
     }
+    handleBudgetChange(event) {
+        this.setState({ budget: event.target.value });
+    }
+    handleTravelTimeChange(event) {
+        this.setState({ travelTime: event.target.value });
+    }
+
+    handleSubmit(event) {
+        alert('A name was submitted: ' + this.state.budget + " " + this.state.travelTime);
+        event.preventDefault();
+    }
     render() {
         let onEvents = {
             'click': this.onChartClick,
             'dataZoom': this.onDataZoom
         }
         return (
-            <div className='examples'>
-                <div className='parent'>
+            <div className='examples' style={divStyle}>
+
+                <div className='form'>
+                    <div className='parent' style={{borderRightWidth:1,borderColor:'black',display:'row',alignItems:'flex'}}>
+                        <form onSubmit={this.handleSubmit}>
+                            <label>
+                                Budget:
+                                <input type="text" value={this.state.budget} onChange={this.handleBudgetChange} />
+                            </label>
+                            <label>
+                                Travel Time:
+                                <input type="text" value={this.state.travelTime} onChange={this.handleTravelTimeChange} />
+                            </label>
+                            <input type="submit" value="Submit" />
+                        </form>
+                    </div>
+                </div>
+                <div className='parent' style={{ width: "80%", height: "100%" }} >
 
                     <ReactEcharts
                         ref={(e) => { this.echarts_react = e; }}
@@ -358,9 +402,14 @@ class App extends Component {
                         style={{ height: '700px', width: '100%' }}
                         className='react_for_echarts'
                         onEvents={onEvents} />
+
                 </div>
             </div>
         );
     }
 }
+const divStyle = {
+    display: 'flex',
+    alignItems: 'center'
+};
 export default App;
