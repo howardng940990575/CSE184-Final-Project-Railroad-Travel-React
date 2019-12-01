@@ -3,6 +3,7 @@ import ReactEcharts from "echarts-for-react";
 import shanghai_station from './shanghai_station_english.json'
 import zhejiang_station from './zhejiang_station_english.json'
 import jiangsu_station from './jiangsu_station_english.json'
+import alldata from './all.json'
 require("echarts/map/js/china.js");
 class App extends Component {
     constructor(props) {
@@ -10,7 +11,8 @@ class App extends Component {
         var shanghai = shanghai_station
         var zhejiang = zhejiang_station
         var jiangsu = jiangsu_station
-
+        // var all = alldata
+        //console.log(alldata.allStation_to_allStation)
         this.state = {
             budget: '',
             travelTime: '',
@@ -18,36 +20,43 @@ class App extends Component {
             shanghainan_all: [],
             shanghainan_hangzhou: [{}],
             value: [{}],
+            showStation:[{}],
+            allStation_to_allStation: alldata.allStation_to_allStation
         }
+
         this.handleBudgetChange = this.handleBudgetChange.bind(this);
         this.handleTravelTimeChange = this.handleTravelTimeChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         for (var i = 0; i < Object.keys(shanghai.name).length; i++) {
             this.state.allStations.push(shanghai.name[i].replace(" Railway Station", ""))
             this.state.value.push({ name: shanghai.name[i].replace(" Railway Station", ""), value: [shanghai.maps_y[i], shanghai.maps_x[i]] })
+            this.state.showStation.push({ name: shanghai.name[i].replace(" Railway Station", ""), value: [shanghai.maps_y[i], shanghai.maps_x[i]] })
         }
         for (var i = 0; i < Object.keys(zhejiang.name).length; i++) {
             this.state.allStations.push(zhejiang.name[i].replace(" Railway Station", ""))
             this.state.value.push({ name: zhejiang.name[i].replace(" Railway Station", ""), value: [zhejiang.maps_y[i], zhejiang.maps_x[i]] })
+            this.state.showStation.push({ name: zhejiang.name[i].replace(" Railway Station", ""), value: [zhejiang.maps_y[i], zhejiang.maps_x[i]] })
         }
         for (var i = 0; i < Object.keys(jiangsu.name).length; i++) {
             this.state.allStations.push(jiangsu.name[i].replace(" Railway Station", ""))
             this.state.value.push({ name: jiangsu.name[i].replace(" Railway Station", ""), value: [jiangsu.maps_y[i], jiangsu.maps_x[i]] })
+            this.state.showStation.push({ name: jiangsu.name[i].replace(" Railway Station", ""), value: [jiangsu.maps_y[i], jiangsu.maps_x[i]] })
         }
-        var tf = true
-        this.state.allStations.forEach(arrivalStation => {
-            var all = []
-            var min = 150
+        //this.setState({showStation:this.state.value})
+        // var tf = true
+        // this.state.allStations.forEach(arrivalStation => {
+        //     var all = []
+        //     var min = 150
 
-            for (var i = 300; i > min; i--) {
-                all.push({ price: i, time: i })
-            }
-            if (tf) {
-                all.push({ price: 149, time: 149 })
-            }
-            this.state.shanghainan_all.push({ toStation: arrivalStation, data: all })
-            tf = !tf
-        })
+        //     for (var i = 300; i > min; i--) {
+        //         all.push({ price: i, time: i })
+        //     }
+        //     if (tf) {
+        //         all.push({ price: 149, time: 149 })
+        //     }
+        //     this.state.shanghainan_all.push({ toStation: arrivalStation, data: all })
+        //     tf = !tf
+        // })
         // for (var i = 0; i < 200 ; i++) {
         //     this.state.shanghainan_hangzhou.push({ price: i, time: i })
         // }
@@ -60,6 +69,33 @@ class App extends Component {
     calculateStations(departureStation) {//用户点击了出发城市，触发这个function
         //console.log(this.state.shanghainan_all)
         var reachableStations = [{}]    //根据计算预算和时间后可以到达的城市
+        //console.log(typeof this.state.allStations_to_allStations)
+        var departureStation_to_allStations = this.state.allStation_to_allStation.find(x => x.id == departureStation)
+        //console.log(departureStation_to_allStations)
+        this.state.allStations.forEach(arrivalStation => {
+            //console.log("arrivalStation:", arrivalStation)
+            //console.log(typeof departureStation_to_allStations)
+            var stationCoords = this.state.value.find(x => x.name === arrivalStation)
+            var departureStation_to_arrivalStation = departureStation_to_allStations.eachStation_to_allStation_data.find(x => x.id === arrivalStation)
+            if (departureStation_to_arrivalStation != undefined) {
+                //console.log(departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[0])
+                for (var i = 0; i < departureStation_to_arrivalStation.eachStation_to_eachStation_data.price.length; i++) {
+                    //console.log(departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] + ' ' + departureStation_to_arrivalStation.eachStation_to_eachStation_data.time_needed[i])
+                    if (departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] < this.state.budget) { //如果价钱低于预算且需时低于旅游时间
+                        reachableStations.push({ name: stationCoords.name, value: stationCoords.value })
+                        break
+                    }
+                }
+                //console.log(departureStation_to_arrivalStation.eachStation_to_eachStation_data)
+            }else{
+                console.log("arrivalStation undefined:", arrivalStation)
+            }
+            // for(var i = 0;i < Object.keys(departureStation_to_arrivalStation.eachStation_to_eachStation_data).length;i++){
+            //    // console.log(departureStation_to_arrivalStation.price[i]+' ' +departureStation_to_arrivalStation[i])
+            // }
+            //console.log(departureStation_to_arrivalStation)
+        })
+        this.setState({ showStation: reachableStations })
         // var departureStation_to_allStations = allStations_to_allStations.find(x=>x.id == departureStation) //从所有站到所有站点中，找出用户点击的出发站到所有站的数据
         // this.state.allStations.forEach(arrivalStation =>{//游历所有站
         //     var stationCoords = this.state.value.find(x => x.name == arrivalStation)//取出当前游历到的station的坐标数据
@@ -73,21 +109,21 @@ class App extends Component {
         // this.setState({ value: reachableStations })//最后更新地图上显示的点
 
 
-        this.state.allStations.forEach(arrivalStation => {
-            //console.log(departureStation, arrivalStation)
-            var stationCoords = this.state.value.find(x => x.name == arrivalStation)
-            var arraivalStationData = this.state.shanghainan_all.find(x => x.toStation == arrivalStation)
-            //console.log(arraivalStationData)
-            arraivalStationData.data.forEach(item => {
-                if (item.price < 150 && item.time < 150) {
-                    reachableStations.push({ name: stationCoords.name, value: stationCoords.value })
-                    console.log("yes");
-                    //this.state.value.pop()
-                }
-            })
-        })
-        this.setState({ value: reachableStations })
-        console.log("yes");
+        // this.state.allStations.forEach(arrivalStation => {
+        //     //console.log(departureStation, arrivalStation)
+        //     var stationCoords = this.state.value.find(x => x.name == arrivalStation)
+        //     var arraivalStationData = this.state.shanghainan_all.find(x => x.toStation == arrivalStation)
+        //     //console.log(arraivalStationData)
+        //     arraivalStationData.data.forEach(item => {
+        //         if (item.price < 150 && item.time < 150) {
+        //             reachableStations.push({ name: stationCoords.name, value: stationCoords.value })
+        //             console.log("yes");
+        //             //this.state.value.pop()
+        //         }
+        //     })
+        // })
+        // this.setState({ value: reachableStations })
+        // console.log("yes");
     }
 
     getOption = () => {
@@ -293,7 +329,7 @@ class App extends Component {
                             color: color[i]
                         }
                     },
-                    data: this.state.value
+                    data: this.state.showStation
                     // data: item[1].map(function (dataItem) {
                     //     return {
                     //         name: dataItem[1].name,
@@ -380,7 +416,7 @@ class App extends Component {
             <div className='examples' style={divStyle}>
 
                 <div className='form'>
-                    <div className='parent' style={{borderRightWidth:1,borderColor:'black',display:'row',alignItems:'flex'}}>
+                    <div className='parent' style={{ borderRightWidth: 1, borderColor: 'black', display: 'row', alignItems: 'flex' }}>
                         <form onSubmit={this.handleSubmit}>
                             <label>
                                 Budget:
