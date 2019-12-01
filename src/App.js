@@ -14,8 +14,8 @@ class App extends Component {
         // var all = alldata
         //console.log(alldata.allStation_to_allStation)
         this.state = {
-            budget: '',
-            travelTime: '',
+            budget: '500',
+            travelTime: '02:00',
             allStations: [],
             shanghainan_all: [],
             shanghainan_hangzhou: [{}],
@@ -66,9 +66,20 @@ class App extends Component {
         //console.log("shanghai"+this.state.value)
 
     }
+    convertTimeToMin(time){
+        if(time.length != 2){
+            return null
+        }else{
+            //console.log(int(time[0])+" "+time[1])
+            return parseInt(time[0],10)*60 + parseInt(time[1],10)
+        }
+
+    }
     calculateStations(departureStation) {//用户点击了出发城市，触发这个function
         //console.log(this.state.shanghainan_all)
         var reachableStations = [{}]    //根据计算预算和时间后可以到达的城市
+        var originStationCoords = this.state.value.find(x => x.name === departureStation)
+        reachableStations.push({ name: originStationCoords.name, value: originStationCoords.value })
         //console.log(typeof this.state.allStations_to_allStations)
         var departureStation_to_allStations = this.state.allStation_to_allStation.find(x => x.id == departureStation)
         //console.log(departureStation_to_allStations)
@@ -81,8 +92,18 @@ class App extends Component {
                 //console.log(departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[0])
                 for (var i = 0; i < departureStation_to_arrivalStation.eachStation_to_eachStation_data.price.length; i++) {
                     //console.log(departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] + ' ' + departureStation_to_arrivalStation.eachStation_to_eachStation_data.time_needed[i])
-                    if (departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] < this.state.budget) { //如果价钱低于预算且需时低于旅游时间
+                    var rawNeededTime = departureStation_to_arrivalStation.eachStation_to_eachStation_data.time_needed[i].split(":")
+                    //console.log(departureStation_to_arrivalStation.eachStation_to_eachStation_data.time_needed[i])
+                    //console.log(departureStation_to_arrivalStation.eachStation_to_eachStation_data.time_needed[i].split(":"))
+                    //var time_needed = new Date();
+                    var rawTravelTime = this.state.travelTime.split(":")
+                    var neededTime = this.convertTimeToMin(rawNeededTime)
+                    var travelTime = this.convertTimeToMin(rawTravelTime)
+                    console.log(rawNeededTime+' '+rawTravelTime)
+                    console.log(neededTime+' '+travelTime)
+                    if (departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] < this.state.budget && neededTime < travelTime) { //如果价钱低于预算且需时低于旅游时间
                         reachableStations.push({ name: stationCoords.name, value: stationCoords.value })
+                        //this.setState({ showStation: reachableStations })
                         break
                     }
                 }
@@ -404,7 +425,8 @@ class App extends Component {
     }
 
     handleSubmit(event) {
-        alert('A name was submitted: ' + this.state.budget + " " + this.state.travelTime);
+        this.setState({ showStation: this.state.value })
+        //alert('A name was submitted: ' + this.state.budget + " " + this.state.travelTime);
         event.preventDefault();
     }
     render() {
@@ -426,7 +448,7 @@ class App extends Component {
                                 Travel Time:
                                 <input type="text" value={this.state.travelTime} onChange={this.handleTravelTimeChange} />
                             </label>
-                            <input type="submit" value="Submit" />
+                            <input type="submit" value="Reset Map" />
                         </form>
                     </div>
                 </div>
