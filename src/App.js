@@ -6,7 +6,7 @@ import jiangsu_station from './jiangsu_station_english.json'
 import alldata from './all.json'
 require("echarts/map/js/china.js");
 class App extends Component {
-    constructor(props) {
+    constructor(props) { 
         super(props)
         var shanghai = shanghai_station
         var zhejiang = zhejiang_station
@@ -14,6 +14,7 @@ class App extends Component {
         // var all = alldata
         //console.log(alldata.allStation_to_allStation)
         this.state = {
+            center:[121.4737, 31.2304],
             budget: '500',
             travelTime: '02:00',
             allStations: [],
@@ -116,6 +117,7 @@ class App extends Component {
             // }
             //console.log(departureStation_to_arrivalStation)
         })
+        
         this.setState({ showStation: reachableStations })
         // var departureStation_to_allStations = allStations_to_allStations.find(x=>x.id == departureStation) //从所有站到所有站点中，找出用户点击的出发站到所有站的数据
         // this.state.allStations.forEach(arrivalStation =>{//游历所有站
@@ -385,7 +387,7 @@ class App extends Component {
             },
             geo: {
                 map: 'china',
-                center: [121.4737, 31.2304],
+                center: this.state.center,
                 zoom: 5,
                 label: {
                     emphasis: {
@@ -413,6 +415,7 @@ class App extends Component {
             console.log('station:', param.data.name)
 
             this.calculateStations(param.data.name)
+           
         } catch (error) {
             console.log({ error })
         }
@@ -437,30 +440,33 @@ class App extends Component {
         return (
             <div className='examples' style={divStyle}>
 
-                <div className='form'>
-                    <div className='parent' style={{ borderRightWidth: 1, borderColor: 'black', display: 'row', alignItems: 'flex' }}>
-                        <form onSubmit={this.handleSubmit}>
-                            <label>
-                                Budget:
-                                <input type="text" value={this.state.budget} onChange={this.handleBudgetChange} />
-                            </label>
-                            <label>
-                                Travel Time:
-                                <input type="text" value={this.state.travelTime} onChange={this.handleTravelTimeChange} />
-                            </label>
-                            <input type="submit" value="Reset Map" />
-                        </form>
-                    </div>
-                </div>
-                <div className='parent' style={{ width: "80%", height: "100%" }} >
+                
+                <div className='parent' style={{ width: "100%", height: "100%" }} >
 
                     <ReactEcharts
                         ref={(e) => { this.echarts_react = e; }}
                         option={this.getOption()}
-                        style={{ height: '700px', width: '100%' }}
+                        style={{ height: '937px', width: '100%' }}
                         className='react_for_echarts'
                         onEvents={onEvents} />
 
+                </div>
+                <div className='minibox' style={{position:'absolute',right:30,top:30,zIndex:15 }} >
+                <div className='form' style={{width: "80%",height: "100%",display: 'flex',alignItems: 'center'}}>
+                    <div className='parent' style={{width: 300,height: 200, alignItems:'center',backgroundColor:'#fafafa', borderRightWidth: 1, borderColor: 'black', display: 'row'}}>
+                        <form style={{marginLeft:30,marginTop:20}} onSubmit={this.handleSubmit}>
+                            <label style={{fontWeight: 'bold',color:'#393e46'}}>
+                                Budget:<br></br>
+                                <input type="text" value={this.state.budget} onChange={this.handleBudgetChange} /><br></br>
+                            </label>
+                            <label style={{fontWeight: 'bold',color:'#393e46'}}>
+                                Travel Time:<br></br>
+                                <input type="text" value={this.state.travelTime} onChange={this.handleTravelTimeChange} /><br></br>
+                            </label>
+                            <input style = {{marginLeft:40,marginTop:40,backgroundColor:'white',height: 30,marginHorizontal: 20,borderRadius: 15,alignItems: 'center',justifyContent: 'center',marginVertical: 5,shadowOffset: { width: 2, height: 2 },shadowColor: 'black',shadowOpacity: 0.2}} type="submit" value="Reset Map" />
+                        </form>
+                    </div>
+                </div>
                 </div>
             </div>
         );
@@ -468,6 +474,8 @@ class App extends Component {
 }
 const divStyle = {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    padding: 0,
+    margin: 0
 };
 export default App;
