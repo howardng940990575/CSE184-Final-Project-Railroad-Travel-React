@@ -6,7 +6,7 @@ import jiangsu_station from './jiangsu_station_english.json'
 import alldata from './all.json'
 require("echarts/map/js/china.js");
 class App extends Component {
-    constructor(props) { 
+    constructor(props) {
         super(props)
         var shanghai = shanghai_station
         var zhejiang = zhejiang_station
@@ -14,14 +14,18 @@ class App extends Component {
         // var all = alldata
         //console.log(alldata.allStation_to_allStation)
         this.state = {
-            center:[121.4737, 31.2304],
+            departureStation: '',
+            arrivalStation: '',
+            clicked: false,
+            center: [121.4737, 31.2304],
             budget: '500',
             travelTime: '02:00',
             allStations: [],
             shanghainan_all: [],
             shanghainan_hangzhou: [{}],
             value: [{}],
-            showStation:[{}],
+            showStation: [{}],
+            showTrain: [],
             allStation_to_allStation: alldata.allStation_to_allStation
         }
 
@@ -67,12 +71,12 @@ class App extends Component {
         //console.log("shanghai"+this.state.value)
 
     }
-    convertTimeToMin(time){
-        if(time.length != 2){
+    convertTimeToMin(time) {
+        if (time.length != 2) {
             return null
-        }else{
+        } else {
             //console.log(int(time[0])+" "+time[1])
-            return parseInt(time[0],10)*60 + parseInt(time[1],10)
+            return parseInt(time[0], 10) * 60 + parseInt(time[1], 10)
         }
 
     }
@@ -100,16 +104,16 @@ class App extends Component {
                     var rawTravelTime = this.state.travelTime.split(":")
                     var neededTime = this.convertTimeToMin(rawNeededTime)
                     var travelTime = this.convertTimeToMin(rawTravelTime)
-                    console.log(rawNeededTime+' '+rawTravelTime)
-                    console.log(neededTime+' '+travelTime)
-                    if (departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] < this.state.budget && neededTime < travelTime) { //如果价钱低于预算且需时低于旅游时间
+                    console.log(rawNeededTime + ' ' + rawTravelTime)
+                    console.log(neededTime + ' ' + travelTime)
+                    if (departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] <= this.state.budget && neededTime <= travelTime) { //如果价钱低于预算且需时低于旅游时间
                         reachableStations.push({ name: stationCoords.name, value: stationCoords.value })
                         //this.setState({ showStation: reachableStations })
                         break
                     }
                 }
                 //console.log(departureStation_to_arrivalStation.eachStation_to_eachStation_data)
-            }else{
+            } else {
                 console.log("arrivalStation undefined:", arrivalStation)
             }
             // for(var i = 0;i < Object.keys(departureStation_to_arrivalStation.eachStation_to_eachStation_data).length;i++){
@@ -117,8 +121,9 @@ class App extends Component {
             // }
             //console.log(departureStation_to_arrivalStation)
         })
-        
+        this.setState({ departureStation: departureStation })
         this.setState({ showStation: reachableStations })
+        this.setState({ clicked: true })
         // var departureStation_to_allStations = allStations_to_allStations.find(x=>x.id == departureStation) //从所有站到所有站点中，找出用户点击的出发站到所有站的数据
         // this.state.allStations.forEach(arrivalStation =>{//游历所有站
         //     var stationCoords = this.state.value.find(x => x.name == arrivalStation)//取出当前游历到的station的坐标数据
@@ -148,6 +153,72 @@ class App extends Component {
         // this.setState({ value: reachableStations })
         // console.log("yes");
     }
+
+    calculatePath(destination) {
+
+        var availableTrain = []
+        this.setState({ arrivalStation: destination })
+        console.log('arrive station ' + this.state.arrivalStation)
+        console.log('departure station ' + this.state.departureStation)
+        console.log("second click")
+        this.setState({ clicked: false })
+        var departureStation_to_allStations = this.state.allStation_to_allStation.find(x => x.id == this.state.departureStation)
+        var departureStation_to_arrivalStation = departureStation_to_allStations.eachStation_to_allStation_data.find(x => x.id == this.state.arrivalStation)
+        console.log(departureStation_to_arrivalStation.eachStation_to_eachStation_data)
+        for (var i = 0; i < departureStation_to_arrivalStation.eachStation_to_eachStation_data.price.length; i++) {
+            var rawNeededTime = departureStation_to_arrivalStation.eachStation_to_eachStation_data.time_needed[i].split(":")
+            var rawTravelTime = this.state.travelTime.split(":")
+            var neededTime = this.convertTimeToMin(rawNeededTime)
+            var travelTime = this.convertTimeToMin(rawTravelTime)
+            if (departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] <= this.state.budget && neededTime <= travelTime) { //如果价钱低于预算且需时低于旅游时间
+                availableTrain.push({
+                    train_number: departureStation_to_arrivalStation.eachStation_to_eachStation_data.train_number[i],
+                    start_time: departureStation_to_arrivalStation.eachStation_to_eachStation_data.start_time[i],
+                    arrive_time: departureStation_to_arrivalStation.eachStation_to_eachStation_data.arrive_time[i],
+                    price: departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i]
+                })
+                //this.setState({ showStation: reachableStations })
+
+            }
+        }
+        console.log(availableTrain)
+        this.setState({ showTrain: availableTrain })
+
+
+    }
+
+    renderList(showTrain) {
+        return (
+            
+            <div style={{backgroundColor:'#f0f5f9' }}>
+                <table style={{marginLeft:30}}>
+                    <thead>
+                    <tr>
+                        <th>Train</th>
+                        <th>{showTrain.train_number}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Start Time</td>
+                        <td>{showTrain.start_time}</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Arrive Time</td>
+                        <td>{showTrain.arrive_time}</td>
+                    </tr>
+                    <tr>
+                        <td>Price</td>
+                        <td>{'¥'+showTrain.price}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+           
+        );
+    }
+
 
     getOption = () => {
 
@@ -410,15 +481,32 @@ class App extends Component {
         return option;
     };
     onChartClick = (param) => {
-        //this.setState({ value: [{ name: 'beijing', value: [116.4551, 40.2539] }] })
-        try {
-            console.log('station:', param.data.name)
 
-            this.calculateStations(param.data.name)
-           
-        } catch (error) {
-            console.log({ error })
+        if (this.state.clicked == false) {
+            try {
+                console.log('First station:', param.data.name)
+
+                this.calculateStations(param.data.name)
+
+            } catch (error) {
+                console.log({ error })
+            }
         }
+        else {
+            //second click
+            try {
+                console.log('Second station:', param.data.name)
+
+                this.calculatePath(param.data.name)
+
+            } catch (error) {
+                console.log({ error })
+            }
+
+
+        }
+        //this.setState({ value: [{ name: 'beijing', value: [116.4551, 40.2539] }] })
+
     }
     handleBudgetChange(event) {
         this.setState({ budget: event.target.value });
@@ -429,6 +517,10 @@ class App extends Component {
 
     handleSubmit(event) {
         this.setState({ showStation: this.state.value })
+        this.setState({ clicked: false })
+        this.setState({ arrivalStation: '' })
+        this.setState({ departureStation: '' })
+        this.setState({showTrain:[]})
         //alert('A name was submitted: ' + this.state.budget + " " + this.state.travelTime);
         event.preventDefault();
     }
@@ -440,7 +532,7 @@ class App extends Component {
         return (
             <div className='examples' style={divStyle}>
 
-                
+
                 <div className='parent' style={{ width: "100%", height: "100%" }} >
 
                     <ReactEcharts
@@ -451,27 +543,40 @@ class App extends Component {
                         onEvents={onEvents} />
 
                 </div>
-                <div className='minibox' style={{position:'absolute',right:30,top:30,zIndex:15 }} >
-                <div className='form' style={{width: "80%",height: "100%",display: 'flex',alignItems: 'center'}}>
-                    <div className='parent' style={{width: 300,height: 200, alignItems:'center',backgroundColor:'#fafafa', borderRightWidth: 1, borderColor: 'black', display: 'row'}}>
-                        <form style={{marginLeft:30,marginTop:20}} onSubmit={this.handleSubmit}>
-                            <label style={{fontWeight: 'bold',color:'#393e46'}}>
-                                Budget:<br></br>
-                                <input type="text" value={this.state.budget} onChange={this.handleBudgetChange} /><br></br>
-                            </label>
-                            <label style={{fontWeight: 'bold',color:'#393e46'}}>
-                                Travel Time:<br></br>
-                                <input type="text" value={this.state.travelTime} onChange={this.handleTravelTimeChange} /><br></br>
-                            </label>
-                            <input style = {{marginLeft:40,marginTop:40,backgroundColor:'white',height: 30,marginHorizontal: 20,borderRadius: 15,alignItems: 'center',justifyContent: 'center',marginVertical: 5,shadowOffset: { width: 2, height: 2 },shadowColor: 'black',shadowOpacity: 0.2}} type="submit" value="Reset Map" />
-                        </form>
+                <div className='minibox' style={{ position: 'absolute', right: 30, top: 30, zIndex: 15 }} >
+                    <div className='form' style={{ width: "80%", height: "100%", display: 'flex', alignItems: 'center' }}>
+                        <div className='parent' style={{ width: 300, height: 200, alignItems: 'center', backgroundColor: '#fafafa', borderRightWidth: 1, borderColor: 'black', display: 'row' }}>
+                            <form style={{ marginLeft: 30, marginTop: 20 }} onSubmit={this.handleSubmit}>
+                                <label style={{ fontWeight: 'bold', color: '#393e46' }}>
+                                    Budget:<br></br>
+                                    <input type="text" value={this.state.budget} onChange={this.handleBudgetChange} /><br></br>
+                                </label>
+                                <label style={{ fontWeight: 'bold', color: '#393e46' }}>
+                                    Travel Time:<br></br>
+                                    <input type="text" value={this.state.travelTime} onChange={this.handleTravelTimeChange} /><br></br>
+                                </label>
+                                <input style={{ marginLeft: 40, marginTop: 40, backgroundColor: 'white', height: 30, marginHorizontal: 20, borderRadius: 15, alignItems: 'center', justifyContent: 'center', marginVertical: 5, shadowOffset: { width: 2, height: 2 }, shadowColor: 'black', shadowOpacity: 0.2 }} type="submit" value="Reset Map" />
+                            </form>
+                        </div>
+
                     </div>
                 </div>
+                <div className='train' style={{ position: 'absolute', right: 30, bottom: 30, zIndex: 15}} >
+                    <div style={{marginRight:70,height:300,width:250, border:1, font:16/26, overflow:'auto'}}>
+                    
+                        {this.state.showTrain.map(showTrain => (
+                            <div key={`${showTrain.start_time}`}>
+                                    {this.renderList(showTrain)}
+                            </div>
+                                ))}
+                    </div>
                 </div>
             </div>
         );
     }
 }
+
+
 const divStyle = {
     display: 'flex',
     alignItems: 'center',
