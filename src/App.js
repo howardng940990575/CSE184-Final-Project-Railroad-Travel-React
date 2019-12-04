@@ -161,7 +161,7 @@ class App extends Component {
         console.log('arrive station ' + this.state.arrivalStation)
         console.log('departure station ' + this.state.departureStation)
         console.log("second click")
-        this.setState({ clicked: false })
+        
         var departureStation_to_allStations = this.state.allStation_to_allStation.find(x => x.id == this.state.departureStation)
         var departureStation_to_arrivalStation = departureStation_to_allStations.eachStation_to_allStation_data.find(x => x.id == this.state.arrivalStation)
         console.log(departureStation_to_arrivalStation.eachStation_to_eachStation_data)
@@ -562,7 +562,7 @@ class App extends Component {
                     </div>
                 </div>
                 <div className='train' style={{ position: 'absolute', right: 30, bottom: 30, zIndex: 15}} >
-                    <div style={{marginRight:70,height:300,width:250, border:1, font:16/26, overflow:'auto'}}>
+                    <div style={{marginRight:60,height:300,width:235, border:1, font:16/26, overflow:'auto'}}>
                     
                         {this.state.showTrain.map(showTrain => (
                             <div key={`${showTrain.start_time}`}>
