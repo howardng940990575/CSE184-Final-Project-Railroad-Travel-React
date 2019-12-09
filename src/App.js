@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Card,CardContent,Typography} from '@material-ui/core';
+import { Card, CardContent, Typography, Table, Paper, TableBody, TableHead, TableCell, TableRow } from '@material-ui/core';
 import ReactEcharts from "echarts-for-react";
 import shanghai_station from './shanghai_station_english.json'
 import zhejiang_station from './zhejiang_station_english.json'
@@ -15,7 +15,7 @@ class App extends Component {
         // var all = alldata
         //console.log(alldata.allStation_to_allStation)
         this.state = {
-            zoom:5,
+            zoom: 5,
             departureStation: '',
             arrivalStation: '',
             clicked: false,
@@ -27,9 +27,9 @@ class App extends Component {
             shanghainan_hangzhou: [{}],
             value: [{}],
             showStation: [],
-            showMainStation:[],
-            showGreenStation:[],
-            showRedStation:[],
+            showMainStation: [],
+            showGreenStation: [],
+            showRedStation: [],
             showTrain: [],
             allStation_to_allStation: alldata.allStation_to_allStation
         }
@@ -38,22 +38,25 @@ class App extends Component {
         this.handleTravelTimeChange = this.handleTravelTimeChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         for (var i = 0; i < Object.keys(shanghai.name).length; i++) {
-            if(this.state.allStation_to_allStation.find(x => x.id == shanghai.name[i].replace(" Railway Station", ""))){
-            this.state.allStations.push(shanghai.name[i].replace(" Railway Station", ""))
-            this.state.value.push({ name: shanghai.name[i].replace(" Railway Station", ""), value: [shanghai.maps_y[i], shanghai.maps_x[i]] })
-            this.state.showStation.push({ name: shanghai.name[i].replace(" Railway Station", ""), value: [shanghai.maps_y[i], shanghai.maps_x[i]] })}
+            if (this.state.allStation_to_allStation.find(x => x.id == shanghai.name[i].replace(" Railway Station", ""))) {
+                this.state.allStations.push(shanghai.name[i].replace(" Railway Station", ""))
+                this.state.value.push({ name: shanghai.name[i].replace(" Railway Station", ""), value: [shanghai.maps_y[i], shanghai.maps_x[i]] })
+                this.state.showStation.push({ name: shanghai.name[i].replace(" Railway Station", ""), value: [shanghai.maps_y[i], shanghai.maps_x[i]] })
+            }
         }
         for (var i = 0; i < Object.keys(zhejiang.name).length; i++) {
-            if(this.state.allStation_to_allStation.find(x => x.id == zhejiang.name[i].replace(" Railway Station", ""))){
-            this.state.allStations.push(zhejiang.name[i].replace(" Railway Station", ""))
-            this.state.value.push({ name: zhejiang.name[i].replace(" Railway Station", ""), value: [zhejiang.maps_y[i], zhejiang.maps_x[i]] })
-            this.state.showStation.push({ name: zhejiang.name[i].replace(" Railway Station", ""), value: [zhejiang.maps_y[i], zhejiang.maps_x[i]] })}
+            if (this.state.allStation_to_allStation.find(x => x.id == zhejiang.name[i].replace(" Railway Station", ""))) {
+                this.state.allStations.push(zhejiang.name[i].replace(" Railway Station", ""))
+                this.state.value.push({ name: zhejiang.name[i].replace(" Railway Station", ""), value: [zhejiang.maps_y[i], zhejiang.maps_x[i]] })
+                this.state.showStation.push({ name: zhejiang.name[i].replace(" Railway Station", ""), value: [zhejiang.maps_y[i], zhejiang.maps_x[i]] })
+            }
         }
         for (var i = 0; i < Object.keys(jiangsu.name).length; i++) {
-            if(this.state.allStation_to_allStation.find(x => x.id == jiangsu.name[i].replace(" Railway Station", ""))){
-            this.state.allStations.push(jiangsu.name[i].replace(" Railway Station", ""))
-            this.state.value.push({ name: jiangsu.name[i].replace(" Railway Station", ""), value: [jiangsu.maps_y[i], jiangsu.maps_x[i]] })
-            this.state.showStation.push({ name: jiangsu.name[i].replace(" Railway Station", ""), value: [jiangsu.maps_y[i], jiangsu.maps_x[i]] })}
+            if (this.state.allStation_to_allStation.find(x => x.id == jiangsu.name[i].replace(" Railway Station", ""))) {
+                this.state.allStations.push(jiangsu.name[i].replace(" Railway Station", ""))
+                this.state.value.push({ name: jiangsu.name[i].replace(" Railway Station", ""), value: [jiangsu.maps_y[i], jiangsu.maps_x[i]] })
+                this.state.showStation.push({ name: jiangsu.name[i].replace(" Railway Station", ""), value: [jiangsu.maps_y[i], jiangsu.maps_x[i]] })
+            }
         }
         //this.setState({showStation:this.state.value})
         // var tf = true
@@ -83,14 +86,14 @@ class App extends Component {
         if (time.length != 2) {
             return null
         } else {
-            console.log("time::::",parseInt(time[0],10)+" "+parseInt(time[1], 10))
+            console.log("time::::", parseInt(time[0], 10) + " " + parseInt(time[1], 10))
             return parseInt(time[0], 10) * 60 + parseInt(time[1], 10)
-            
+
         }
 
     }
     calculateStations(departureStation) {
-        
+
         //用户点击了出发城市，触发这个function
         //console.log(this.state.shanghainan_all)
         var reachableStations = [{}]    //根据计算预算和时间后可以到达的城市
@@ -99,7 +102,7 @@ class App extends Component {
         //console.log(typeof this.state.allStations_to_allStations)
         var departureStation_to_allStations = this.state.allStation_to_allStation.find(x => x.id == departureStation)
         console.log("here")
-        console.log(this.state.allStation_to_allStation.find(x => x.id == departureStation)==null)
+        console.log(this.state.allStation_to_allStation.find(x => x.id == departureStation) == null)
         //console.log(departureStation_to_allStations)
         this.state.allStations.forEach(arrivalStation => {
             //console.log("arrivalStation:", arrivalStation)
@@ -119,7 +122,7 @@ class App extends Component {
                     var travelTime = this.convertTimeToMin(rawTravelTime)
                     console.log(rawNeededTime + ' ' + rawTravelTime)
                     console.log(neededTime + ' ' + travelTime)
-                    if (departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] <= this.state.budget && neededTime <= travelTime && departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i]>0) { //如果价钱低于预算且需时低于旅游时间
+                    if (departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] <= this.state.budget && neededTime <= travelTime && departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] > 0) { //如果价钱低于预算且需时低于旅游时间
                         reachableStations.push({ name: stationCoords.name, value: stationCoords.value })
                         //this.setState({ showStation: reachableStations })
                         break
@@ -174,7 +177,7 @@ class App extends Component {
         console.log('arrive station ' + this.state.arrivalStation)
         console.log('departure station ' + this.state.departureStation)
         console.log("second click")
-        
+
         var departureStation_to_allStations = this.state.allStation_to_allStation.find(x => x.id == this.state.departureStation)
         var departureStation_to_arrivalStation = departureStation_to_allStations.eachStation_to_allStation_data.find(x => x.id == this.state.arrivalStation)
         console.log(departureStation_to_arrivalStation.eachStation_to_eachStation_data)
@@ -183,7 +186,7 @@ class App extends Component {
             var rawTravelTime = this.state.travelTime.split(":")
             var neededTime = this.convertTimeToMin(rawNeededTime)
             var travelTime = this.convertTimeToMin(rawTravelTime)
-            if (departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] <= this.state.budget && neededTime <= travelTime && departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i]>0) { //如果价钱低于预算且需时低于旅游时间
+            if (departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] <= this.state.budget && neededTime <= travelTime && departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] > 0) { //如果价钱低于预算且需时低于旅游时间
                 availableTrain.push({
                     train_number: departureStation_to_arrivalStation.eachStation_to_eachStation_data.train_number[i],
                     start_time: departureStation_to_arrivalStation.eachStation_to_eachStation_data.start_time[i],
@@ -202,36 +205,15 @@ class App extends Component {
 
     renderList(showTrain) {
         return (
-            
-            
-                    <tr>
-                    {/* <td>{this.state.departureStation}</td>
-                    <td>{this.state.arrivalStation}</td> */}
-                    <td>{showTrain.train_number}</td>
-                        
-                        <td>{showTrain.start_time}</td>
-                    
-                    
-                    
-                        
-                        <td>{showTrain.arrive_time}</td>
-                    
-                    
-                       
-                        <td>{'¥'+showTrain.price}</td>
-                        {/* <Card >
-                        <CardContent>
-                  <Typography gutterBottom variant="h5" component="h2">
-                  {showTrain.train_number}
-                  </Typography>
-                  </CardContent>
-                        </Card> */}
-                        </tr>
-                        
-                    
-                    
-                
-           
+            <TableRow key={showTrain.start_time}>
+              <TableCell align="center" component="th" scope="row">
+                {showTrain.train_number}
+              </TableCell>
+              <TableCell align="center">{showTrain.start_time}</TableCell>
+              <TableCell align="center">{showTrain.arrive_time}</TableCell>
+              <TableCell align="center">{showTrain.price}</TableCell>
+              
+            </TableRow>
         );
     }
 
@@ -358,26 +340,88 @@ class App extends Component {
 
         const trainPath = 'path://M367.837,89.25h-54.824v-51h121.125c6.375,0,12.75,6.375,12.75,12.75c0,10.2,8.926,19.125,19.125,19.125S485.138,61.2,485.138,51c0-28.05-22.949-51-51-51h-280.5c-28.05,0-51,22.95-51,51c0,10.2,8.925,19.125,19.125,19.125c10.2,0,19.125-8.925,19.125-19.125c0-7.65,5.1-12.75,12.75-12.75h121.125v49.725h-54.825c-62.475,0-112.2,51-112.2,112.2v229.501c0,25.5,17.85,47.174,43.35,51l-36.975,70.125c-6.375,12.75-1.275,28.049,10.2,34.424c3.825,2.551,7.65,2.551,11.475,2.551c8.925,0,17.85-5.1,22.95-14.025l7.65-15.301h252.449l7.65,15.301c5.1,8.926,14.025,14.025,22.951,14.025c3.824,0,7.648-1.275,11.475-2.551c12.75-6.375,17.85-21.674,10.199-34.424l-36.975-70.125c24.225-3.826,43.35-25.5,43.35-51V201.45C480.038,138.975,429.038,89.25,367.837,89.25z M398.438,436.051c-20.4,0-36.977-16.576-36.977-36.977c0-20.398,16.576-36.975,36.977-36.975c20.398,0,36.975,16.576,36.975,36.975C435.413,419.475,418.837,436.051,398.438,436.051zM153.638,215.475c0-39.525,31.875-70.125,71.4-70.125h140.25c39.525,0,71.4,31.875,71.4,70.125v62.475c0,14.025-11.477,24.226-25.5,24.226H177.863c-14.025,0-25.5-10.201-25.5-24.226C153.638,277.95,153.638,215.475,153.638,215.475zM189.337,360.824c20.4,0,36.975,16.576,36.975,36.977c0,20.398-16.575,36.975-36.975,36.975c-20.4,0-36.975-16.576-36.975-36.975C152.363,377.4,168.938,360.824,189.337,360.824z M186.788,522.75l20.4-39.525h172.126l20.398,39.525H186.788z';
 
-        
 
-        const renderColor = ()=>{
+
+        const renderColor = () => {
             console.log("times")
-            
+
             return "#52616b"
         }
         const color = ['#000000', '#ffffff', '#52616b'];
         const series = [];
-        
-       
 
-        
-            //console.log("item.name:",item.name)
+
+
+
+        //console.log("item.name:",item.name)
+        series.push(
+            {
+
+                type: 'effectScatter',
+                coordinateSystem: 'geo',
+                zlevel: 1,
+                rippleEffect: {
+                    brushType: 'stroke'
+                },
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'right',
+                        formatter: '{b}'
+
+                    }
+                },
+                symbolSize: 10,
+                itemStyle: {
+                    normal: {
+
+                        color: renderColor()
+                    }
+                },
+                data: this.state.showStation
+
+            })
+        if (this.state.departureStation != '') {
+            this.state.showStation.forEach((item, index) => {
+                if (item.name == this.state.departureStation) {
+                    console.log("nmsl", item)
+                    series.push(
+                        {
+
+                            type: 'effectScatter',
+                            coordinateSystem: 'geo',
+                            zlevel: 2,
+                            rippleEffect: {
+                                brushType: 'stroke'
+                            },
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'right',
+                                    formatter: '{b}'
+                                }
+                            },
+                            symbolSize: 10,
+                            itemStyle: {
+                                normal: {
+
+                                    color: "#00adb5"
+                                }
+                            },
+                            data: [item]
+                        })
+
+                }
+            })
+
+        }
+        else {
             series.push(
                 {
-                    
+
                     type: 'effectScatter',
                     coordinateSystem: 'geo',
-                    zlevel: 1,
+                    zlevel: 2,
                     rippleEffect: {
                         brushType: 'stroke'
                     },
@@ -386,57 +430,34 @@ class App extends Component {
                             show: true,
                             position: 'right',
                             formatter: '{b}'
-                            
                         }
                     },
                     symbolSize: 10,
                     itemStyle: {
                         normal: {
-                            
-                            color: renderColor()
+
+                            color: "#00adb5"
                         }
                     },
-                    data: this.state.showStation
+                    data: []
 
+                    //data: [item]
+                    // data: item[1].map(function (dataItem) {
+                    //     return {
+                    //         name: dataItem[1].name,
+                    //         value: geoCoordMap[dataItem[1].name].concat([dataItem[1].value])
+                    //     };
+                    // })
                 })
-                if(this.state.departureStation!=''){
-                    this.state.showStation.forEach((item,index)=>{
-                        if(item.name==this.state.departureStation){
-                            console.log("nmsl",item)
-                            series.push(
-                                {
-                                    
-                                    type: 'effectScatter',
-                                    coordinateSystem: 'geo',
-                                    zlevel: 2,
-                                    rippleEffect: {
-                                        brushType: 'stroke'
-                                    },
-                                    label: {
-                                        normal: {
-                                            show: true,
-                                            position: 'right',
-                                            formatter: '{b}'
-                                        }
-                                    },
-                                    symbolSize: 10,
-                                    itemStyle: {
-                                        normal: {
-                                            
-                                            color: "#00adb5"
-                                        }
-                                    },
-                                    data:[item]
-                                })
+        }
 
-                        }
-                    })
-
-                }
-                else{
+        if (this.state.arrivalStation != '') {
+            this.state.showStation.forEach((item, index) => {
+                if (item.name == this.state.arrivalStation) {
+                    console.log("nmsl", item)
                     series.push(
                         {
-                            
+
                             type: 'effectScatter',
                             coordinateSystem: 'geo',
                             zlevel: 2,
@@ -453,13 +474,11 @@ class App extends Component {
                             symbolSize: 10,
                             itemStyle: {
                                 normal: {
-                                    
-                                    color: "#00adb5"
+
+                                    color: "#ff5722"
                                 }
                             },
-                            data:[]
-
-                            //data: [item]
+                            data: [item]
                             // data: item[1].map(function (dataItem) {
                             //     return {
                             //         name: dataItem[1].name,
@@ -467,135 +486,98 @@ class App extends Component {
                             //     };
                             // })
                         })
-                }
-                
-                if(this.state.arrivalStation!=''){
-                    this.state.showStation.forEach((item,index)=>{
-                        if(item.name==this.state.arrivalStation){
-                            console.log("nmsl",item)
-                            series.push(
-                                {
-                                    
-                                    type: 'effectScatter',
-                                    coordinateSystem: 'geo',
-                                    zlevel: 2,
-                                    rippleEffect: {
-                                        brushType: 'stroke'
-                                    },
-                                    label: {
-                                        normal: {
-                                            show: true,
-                                            position: 'right',
-                                            formatter: '{b}'
-                                        }
-                                    },
-                                    symbolSize: 10,
-                                    itemStyle: {
-                                        normal: {
-                                            
-                                            color: "#ff5722"
-                                        }
-                                    },
-                                    data: [item]
-                                    // data: item[1].map(function (dataItem) {
-                                    //     return {
-                                    //         name: dataItem[1].name,
-                                    //         value: geoCoordMap[dataItem[1].name].concat([dataItem[1].value])
-                                    //     };
-                                    // })
-                                })
 
+                }
+            })
+
+        }
+        else {
+            series.push(
+                {
+
+                    type: 'effectScatter',
+                    coordinateSystem: 'geo',
+                    zlevel: 2,
+                    rippleEffect: {
+                        brushType: 'stroke'
+                    },
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'right',
+                            formatter: '{b}'
                         }
-                    })
+                    },
+                    symbolSize: 10,
+                    itemStyle: {
+                        normal: {
 
-                }
-                else{
-                    series.push(
-                        {
-                            
-                            type: 'effectScatter',
-                            coordinateSystem: 'geo',
-                            zlevel: 2,
-                            rippleEffect: {
-                                brushType: 'stroke'
-                            },
-                            label: {
-                                normal: {
-                                    show: true,
-                                    position: 'right',
-                                    formatter: '{b}'
-                                }
-                            },
-                            symbolSize: 10,
-                            itemStyle: {
-                                normal: {
-                                    
-                                    color: "#00adb5"
-                                }
-                            },
-                            data:[]
-                        })
-                }
-                if(this.state.arrivalStation!=''&&this.state.departureStation!=''){
-                    var departureValue = this.state.value.find(x => x.name == this.state.departureStation)
-                    var arrivalValue = this.state.value.find(y => y.name == this.state.arrivalStation)
-                    console.log(departureValue.value)
-                    series.push(
-                        {
-                            //name: item[0] + ' Top10',
-                            type: 'lines',
-                            zlevel: 2,
-                            symbol: ['none', 'arrow'],
-                            symbolSize: 10,
-                            effect: {
-                                show: true,
-                                period: 6,
-                                trailLength: 0,
-                                symbol: trainPath,
-                                symbolSize: 15
-                            },
-                            lineStyle: {
-                                normal: {
-                                    color: '#000',
-                                    width: 1,
-                                    opacity: 0.6,
-                                    curveness: 0.2
-                                }
-                            },
-                            data:[{fromName:departureValue.name,toName:arrivalValue.name,coords:[departureValue.value,arrivalValue.value]}]
-                        },
-                            
-                            
-                        )
+                            color: "#00adb5"
+                        }
+                    },
+                    data: []
+                })
+        }
+        if (this.state.arrivalStation != '' && this.state.departureStation != '') {
+            var departureValue = this.state.value.find(x => x.name == this.state.departureStation)
+            var arrivalValue = this.state.value.find(y => y.name == this.state.arrivalStation)
+            console.log(departureValue.value)
+            series.push(
+                {
+                    //name: item[0] + ' Top10',
+                    type: 'lines',
+                    zlevel: 2,
+                    symbol: ['none', 'arrow'],
+                    symbolSize: 10,
+                    effect: {
+                        show: true,
+                        period: 6,
+                        trailLength: 0,
+                        symbol: trainPath,
+                        symbolSize: 15
+                    },
+                    lineStyle: {
+                        normal: {
+                            color: '#000',
+                            width: 1,
+                            opacity: 0.6,
+                            curveness: 0.2
+                        }
+                    },
+                    data: [{ fromName: departureValue.name, toName: arrivalValue.name, coords: [departureValue.value, arrivalValue.value] }]
+                },
 
-                }
-                
-                
-            console.log("initialize:",series)
-            
+
+            )
+
+        }
+
+
+        console.log("initialize:", series)
+
         const option = {
             backgroundColor: '#a8d8ea',
             title: {
                 text: 'Train Stations in China',
-                
+
                 left: 'center',
                 textStyle: {
                     color: '#000'
                 }
             },
             tooltip: {
-                backgroundColor:'rgba(255,255,255,0.7)',
-                borderWidth:1,
-                borderRadius:5,
-                textStyle:{
-                    color:'#000'
+                backgroundColor: 'rgba(255,255,255,0.7)',
+                borderWidth: 1,
+                borderRadius: 5,
+                textStyle: {
+                    color: '#000'
                 },
                 trigger: 'item',
-                formatter: (param)=>{
-                    return "Station Name: "+param.name
+                formatter: (param) => {
+                    return "Station Name: " + param.name
                 }
             },
-            
+
             geo: {
                 map: 'china',
                 center: this.state.center,
@@ -628,31 +610,32 @@ class App extends Component {
                 console.log('color station:', this.echarts_react)
                 var center = this.echarts_react.getEchartsInstance().getOption().geo[0].center
                 var zoom = this.echarts_react.getEchartsInstance().getOption().geo[0].zoom
-                this.setState({center: center})
+                this.setState({ center: center })
                 //this.render()
                 //this.echarts_react.getEchartsInstance().setOption({geo:[{zoom:5}]})
-                this.setState({zoom: zoom})
-                console.log("chulaila:",this.echarts_react.getEchartsInstance().getOption().geo[0])
+                this.setState({ zoom: zoom })
+                console.log("chulaila:", this.echarts_react.getEchartsInstance().getOption().geo[0])
                 this.calculateStations(param.data.name)
 
             } catch (error) {
                 console.log({ error })
             }
-        } 
+        }
         else {
             //second click
             try {
-                if(this.state.departureStation!=this.state.arrivalStation){
-                var center = this.echarts_react.getEchartsInstance().getOption().geo[0].center
-                var zoom = this.echarts_react.getEchartsInstance().getOption().geo[0].zoom
-                this.setState({center: center})
-                this.setState({zoom: zoom})
-                console.log("chulaila:",this.echarts_react.getEchartsInstance().getOption().geo[0])
-                console.log("kankan",this.echarts_react)
-                console.log("chulaila:",this.echarts_react.getEchartsInstance().getOption())
-                console.log('Second station:', param.data.name)
-                //console.log('series length:', series.length)
-                this.calculatePath(param.data.name)}
+                if (this.state.departureStation != this.state.arrivalStation) {
+                    var center = this.echarts_react.getEchartsInstance().getOption().geo[0].center
+                    var zoom = this.echarts_react.getEchartsInstance().getOption().geo[0].zoom
+                    this.setState({ center: center })
+                    this.setState({ zoom: zoom })
+                    console.log("chulaila:", this.echarts_react.getEchartsInstance().getOption().geo[0])
+                    console.log("kankan", this.echarts_react)
+                    console.log("chulaila:", this.echarts_react.getEchartsInstance().getOption())
+                    console.log('Second station:', param.data.name)
+                    //console.log('series length:', series.length)
+                    this.calculatePath(param.data.name)
+                }
 
             } catch (error) {
                 console.log({ error })
@@ -663,40 +646,46 @@ class App extends Component {
         //this.setState({ value: [{ name: 'beijing', value: [116.4551, 40.2539] }] })
 
     }
-    onDataZoom = (data) =>{
-        console.log("zoom: ",data)
+    onDataZoom = (data) => {
+        console.log("zoom: ", data)
     }
     handleBudgetChange(event) {
         var center = this.echarts_react.getEchartsInstance().getOption().geo[0].center
         var zoom = this.echarts_react.getEchartsInstance().getOption().geo[0].zoom
-        this.setState({center: center})
-        this.setState({zoom: zoom})
-        this.setState({ budget: event.target.value });
+        this.setState({ center: center })
+        this.setState({ zoom: zoom })
+        if (event.target.value == '') {
+            this.setState({ budget:"10000"});
+        }
+        else {
+            this.setState({ budget: event.target.value });
+        }
+        
     }
     handleTravelTimeChange(event) {
         var center = this.echarts_react.getEchartsInstance().getOption().geo[0].center
         var zoom = this.echarts_react.getEchartsInstance().getOption().geo[0].zoom
-        this.setState({center: center})
-        this.setState({zoom: zoom})
-        if(event.target.value==''){
+        this.setState({ center: center })
+        this.setState({ zoom: zoom })
+        if (event.target.value == '') {
             this.setState({ travelTime: "99:00" });
         }
-        else{
-        this.setState({ travelTime: event.target.value });
+        else {
+            this.setState({ travelTime: event.target.value });
         }
     }
 
     handleSubmit(event) {
         var center = this.echarts_react.getEchartsInstance().getOption().geo[0].center
         var zoom = this.echarts_react.getEchartsInstance().getOption().geo[0].zoom
-        this.setState({center: center})
-        this.setState({zoom: zoom})
-        this.setState({showGreenStation:[]})
+        this.setState({ center: center })
+        this.setState({ zoom: zoom })
+        this.setState({ showGreenStation: [] })
         this.setState({ showStation: this.state.value })
         this.setState({ clicked: false })
         this.setState({ arrivalStation: '' })
         this.setState({ departureStation: '' })
-        this.setState({showTrain:[]})
+        this.setState({ showTrain: [] })
         //alert('A name was submitted: ' + this.state.budget + " " + this.state.travelTime);
         event.preventDefault();
     }
@@ -706,7 +695,7 @@ class App extends Component {
             'dataZoom': this.onDataZoom
         }
         return (
-            
+
             <div className='examples' style={divStyle}>
 
 
@@ -738,49 +727,45 @@ class App extends Component {
 
                     </div>
                 </div>
-                <div style={{ position: 'absolute', left: 30, bottom: 30, zIndex: 15}} >
-                
+                <div style={{ position: 'absolute', left: 30, bottom: 30, zIndex: 15 }} >
+
                 </div>
-                {this.state.showTrain.length>0?(
-                    <div style={{ position: 'absolute', right: 30, bottom: 30, zIndex: 15}} >
-                    <div style={{backgroundColor:'#f0f5f9',marginRight:60,height:150,width:400, border:1, font:16/26, overflow:'auto'}}>
-                    
-                    <table style={{borderCollapse:'collapse'}}>
-                    <thead>
-                    <tr>
-                        {/* <th>Departure Station</th>
-                        
-                    
-                        <th>Arrival Station</th> */}
-                        
-                    
-                        <th>Train</th>
+                {this.state.showTrain.length > 0 ? (
+                    <div style={{ position: 'absolute',marginRight:60, right: 30, bottom: 30, zIndex: 15 }} >
+                        <Typography variant="h6" component="h6" align="right">{"Departure Station: "+this.state.departureStation}</Typography>
+                        <Typography variant="h6" component="h6" align="right">{"Arrival Station: "+this.state.arrivalStation}</Typography>
+                        <div style={{backgroundColor:'#f0f5f9',height:400,width:500, border:1, font:16/26, overflow:'auto'}}>
+                        <Paper >
+                            <Table  aria-label="customized table">
+                                <TableHead style={{backgroundColor:"#52616b"}}>
+                                    <TableRow>
+                                        <TableCell align="center" style={{color:'#fff'}}>Train Number:</TableCell>
+                                        <TableCell align="center" style={{color:'#fff'}}>Start Time:</TableCell>
+                                        <TableCell align="center" style={{color:'#fff'}}>arrival Time:</TableCell>
+                                        <TableCell align="center" style={{color:'#fff'}}>Price(¥)</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
 
-                        <th>Start Time</th>
 
-                        <th>Arrival Time</th>
+                                    {this.state.showTrain.map(showTrain => (
 
-                        <th>Price</th>
-                        
-                    </tr>
-                    </thead>
-                    <tbody style={{marginTop:10}}>
-                        {this.state.showTrain.map(showTrain => (
-                            
-                           
-                                
-                                    this.renderList(showTrain)
-                                    
-                            
-                            
-                                ))}
-                                </tbody>
-                                </table>
-                                    </div>
+
+
+                                        this.renderList(showTrain)
+
+
+
+                                    ))}
+
+                                </TableBody>
+                            </Table>
+                        </Paper>
+                        </div>
                     </div>
-               
-                ):null}
-                
+
+                ) : null}
+
             </div>
         );
     }
