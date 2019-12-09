@@ -198,8 +198,8 @@ class App extends Component {
             
             
                     <tr>
-                    <td>{this.state.departureStation}</td>
-                    <td>{this.state.arrivalStation}</td>
+                    {/* <td>{this.state.departureStation}</td>
+                    <td>{this.state.arrivalStation}</td> */}
                     <td>{showTrain.train_number}</td>
                         
                         <td>{showTrain.start_time}</td>
@@ -710,15 +710,15 @@ class App extends Component {
                 </div>
                 {this.state.showTrain.length>0?(
                     <div className='train' style={{ position: 'absolute', right: 30, bottom: 30, zIndex: 15}} >
-                    <div style={{backgroundColor:'#f0f5f9',marginRight:60,height:150,width:600, border:1, font:16/26, overflow:'auto'}}>
+                    <div style={{backgroundColor:'#f0f5f9',marginRight:60,height:150,width:300, border:1, font:16/26, overflow:'auto'}}>
                     
                     <table style={{borderWidth:1}}>
                     <thead>
                     <tr>
-                        <th>Departure Station</th>
+                        {/* <th>Departure Station</th>
                         
                     
-                        <th>Arrival Station</th>
+                        <th>Arrival Station</th> */}
                         
                     
                         <th>Train</th>
