@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://howardng940990575.github.io/CSE184-Final-Project-Railroad-Travel-React/",
   "dependencies": {
+    "@material-ui/core": "^4.7.2",
     "echarts": "^4.5.0",
     "echarts-for-react": "^2.0.15-beta.1",
     "gh-pages": "^2.1.1",

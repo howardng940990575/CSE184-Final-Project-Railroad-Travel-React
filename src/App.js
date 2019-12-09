@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {Card,CardContent,Typography} from '@material-ui/core';
 import ReactEcharts from "echarts-for-react";
 import shanghai_station from './shanghai_station_english.json'
 import zhejiang_station from './zhejiang_station_english.json'
@@ -26,6 +27,7 @@ class App extends Component {
             shanghainan_hangzhou: [{}],
             value: [{}],
             showStation: [],
+            showMainStation:[],
             showGreenStation:[],
             showRedStation:[],
             showTrain: [],
@@ -36,19 +38,22 @@ class App extends Component {
         this.handleTravelTimeChange = this.handleTravelTimeChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         for (var i = 0; i < Object.keys(shanghai.name).length; i++) {
+            if(this.state.allStation_to_allStation.find(x => x.id == shanghai.name[i].replace(" Railway Station", ""))){
             this.state.allStations.push(shanghai.name[i].replace(" Railway Station", ""))
             this.state.value.push({ name: shanghai.name[i].replace(" Railway Station", ""), value: [shanghai.maps_y[i], shanghai.maps_x[i]] })
-            this.state.showStation.push({ name: shanghai.name[i].replace(" Railway Station", ""), value: [shanghai.maps_y[i], shanghai.maps_x[i]] })
+            this.state.showStation.push({ name: shanghai.name[i].replace(" Railway Station", ""), value: [shanghai.maps_y[i], shanghai.maps_x[i]] })}
         }
         for (var i = 0; i < Object.keys(zhejiang.name).length; i++) {
+            if(this.state.allStation_to_allStation.find(x => x.id == zhejiang.name[i].replace(" Railway Station", ""))){
             this.state.allStations.push(zhejiang.name[i].replace(" Railway Station", ""))
             this.state.value.push({ name: zhejiang.name[i].replace(" Railway Station", ""), value: [zhejiang.maps_y[i], zhejiang.maps_x[i]] })
-            this.state.showStation.push({ name: zhejiang.name[i].replace(" Railway Station", ""), value: [zhejiang.maps_y[i], zhejiang.maps_x[i]] })
+            this.state.showStation.push({ name: zhejiang.name[i].replace(" Railway Station", ""), value: [zhejiang.maps_y[i], zhejiang.maps_x[i]] })}
         }
         for (var i = 0; i < Object.keys(jiangsu.name).length; i++) {
+            if(this.state.allStation_to_allStation.find(x => x.id == jiangsu.name[i].replace(" Railway Station", ""))){
             this.state.allStations.push(jiangsu.name[i].replace(" Railway Station", ""))
             this.state.value.push({ name: jiangsu.name[i].replace(" Railway Station", ""), value: [jiangsu.maps_y[i], jiangsu.maps_x[i]] })
-            this.state.showStation.push({ name: jiangsu.name[i].replace(" Railway Station", ""), value: [jiangsu.maps_y[i], jiangsu.maps_x[i]] })
+            this.state.showStation.push({ name: jiangsu.name[i].replace(" Railway Station", ""), value: [jiangsu.maps_y[i], jiangsu.maps_x[i]] })}
         }
         //this.setState({showStation:this.state.value})
         // var tf = true
@@ -93,6 +98,8 @@ class App extends Component {
         reachableStations.push({ name: originStationCoords.name, value: originStationCoords.value })
         //console.log(typeof this.state.allStations_to_allStations)
         var departureStation_to_allStations = this.state.allStation_to_allStation.find(x => x.id == departureStation)
+        console.log("here")
+        console.log(this.state.allStation_to_allStation.find(x => x.id == departureStation)==null)
         //console.log(departureStation_to_allStations)
         this.state.allStations.forEach(arrivalStation => {
             //console.log("arrivalStation:", arrivalStation)
@@ -112,7 +119,7 @@ class App extends Component {
                     var travelTime = this.convertTimeToMin(rawTravelTime)
                     console.log(rawNeededTime + ' ' + rawTravelTime)
                     console.log(neededTime + ' ' + travelTime)
-                    if (departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] <= this.state.budget && neededTime <= travelTime) { //如果价钱低于预算且需时低于旅游时间
+                    if (departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] <= this.state.budget && neededTime <= travelTime && departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i]>0) { //如果价钱低于预算且需时低于旅游时间
                         reachableStations.push({ name: stationCoords.name, value: stationCoords.value })
                         //this.setState({ showStation: reachableStations })
                         break
@@ -176,7 +183,7 @@ class App extends Component {
             var rawTravelTime = this.state.travelTime.split(":")
             var neededTime = this.convertTimeToMin(rawNeededTime)
             var travelTime = this.convertTimeToMin(rawTravelTime)
-            if (departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] <= this.state.budget && neededTime <= travelTime) { //如果价钱低于预算且需时低于旅游时间
+            if (departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] <= this.state.budget && neededTime <= travelTime && departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i]>0) { //如果价钱低于预算且需时低于旅游时间
                 availableTrain.push({
                     train_number: departureStation_to_arrivalStation.eachStation_to_eachStation_data.train_number[i],
                     start_time: departureStation_to_arrivalStation.eachStation_to_eachStation_data.start_time[i],
@@ -212,7 +219,15 @@ class App extends Component {
                     
                        
                         <td>{'¥'+showTrain.price}</td>
+                        {/* <Card >
+                        <CardContent>
+                  <Typography gutterBottom variant="h5" component="h2">
+                  {showTrain.train_number}
+                  </Typography>
+                  </CardContent>
+                        </Card> */}
                         </tr>
+                        
                     
                     
                 
@@ -341,24 +356,9 @@ class App extends Component {
             '韶关': [113.7964, 24.7028]
         };
 
-        const planePath = 'path://M1705.06,1318.313v-89.254l-319.9-221.799l0.073-208.063c0.521-84.662-26.629-121.796-63.961-121.491c-37.332-0.305-64.482,36.829-63.961,121.491l0.073,208.063l-319.9,221.799v89.254l330.343-157.288l12.238,241.308l-134.449,92.931l0.531,42.034l175.125-42.917l175.125,42.917l0.531-42.034l-134.449-92.931l12.238-241.308L1705.06,1318.313z';
+        const trainPath = 'path://M367.837,89.25h-54.824v-51h121.125c6.375,0,12.75,6.375,12.75,12.75c0,10.2,8.926,19.125,19.125,19.125S485.138,61.2,485.138,51c0-28.05-22.949-51-51-51h-280.5c-28.05,0-51,22.95-51,51c0,10.2,8.925,19.125,19.125,19.125c10.2,0,19.125-8.925,19.125-19.125c0-7.65,5.1-12.75,12.75-12.75h121.125v49.725h-54.825c-62.475,0-112.2,51-112.2,112.2v229.501c0,25.5,17.85,47.174,43.35,51l-36.975,70.125c-6.375,12.75-1.275,28.049,10.2,34.424c3.825,2.551,7.65,2.551,11.475,2.551c8.925,0,17.85-5.1,22.95-14.025l7.65-15.301h252.449l7.65,15.301c5.1,8.926,14.025,14.025,22.951,14.025c3.824,0,7.648-1.275,11.475-2.551c12.75-6.375,17.85-21.674,10.199-34.424l-36.975-70.125c24.225-3.826,43.35-25.5,43.35-51V201.45C480.038,138.975,429.038,89.25,367.837,89.25z M398.438,436.051c-20.4,0-36.977-16.576-36.977-36.977c0-20.398,16.576-36.975,36.977-36.975c20.398,0,36.975,16.576,36.975,36.975C435.413,419.475,418.837,436.051,398.438,436.051zM153.638,215.475c0-39.525,31.875-70.125,71.4-70.125h140.25c39.525,0,71.4,31.875,71.4,70.125v62.475c0,14.025-11.477,24.226-25.5,24.226H177.863c-14.025,0-25.5-10.201-25.5-24.226C153.638,277.95,153.638,215.475,153.638,215.475zM189.337,360.824c20.4,0,36.975,16.576,36.975,36.977c0,20.398-16.575,36.975-36.975,36.975c-20.4,0-36.975-16.576-36.975-36.975C152.363,377.4,168.938,360.824,189.337,360.824z M186.788,522.75l20.4-39.525h172.126l20.398,39.525H186.788z';
 
-        const convertData = function (data) {
-            var res = [];
-            for (var i = 0; i < data.length; i++) {
-                var dataItem = data[i];
-                var fromCoord = geoCoordMap[dataItem[0].name];
-                var toCoord = geoCoordMap[dataItem[1].name];
-                if (fromCoord && toCoord) {
-                    res.push({
-                        fromName: dataItem[0].name,
-                        toName: dataItem[1].name,
-                        coords: [fromCoord, toCoord]
-                    });
-                }
-            }
-            return res;
-        };
+        
 
         const renderColor = ()=>{
             console.log("times")
@@ -368,7 +368,7 @@ class App extends Component {
         const color = ['#000000', '#ffffff', '#52616b'];
         const series = [];
         
-        
+       
 
         
             //console.log("item.name:",item.name)
@@ -385,8 +385,8 @@ class App extends Component {
                         normal: {
                             show: true,
                             position: 'right',
-
                             formatter: '{b}'
+                            
                         }
                     },
                     symbolSize: 10,
@@ -397,12 +397,7 @@ class App extends Component {
                         }
                     },
                     data: this.state.showStation
-                    // data: item[1].map(function (dataItem) {
-                    //     return {
-                    //         name: dataItem[1].name,
-                    //         value: geoCoordMap[dataItem[1].name].concat([dataItem[1].value])
-                    //     };
-                    // })
+
                 })
                 if(this.state.departureStation!=''){
                     this.state.showStation.forEach((item,index)=>{
@@ -432,14 +427,6 @@ class App extends Component {
                                         }
                                     },
                                     data:[item]
-
-                                    //data: [item]
-                                    // data: item[1].map(function (dataItem) {
-                                    //     return {
-                                    //         name: dataItem[1].name,
-                                    //         value: geoCoordMap[dataItem[1].name].concat([dataItem[1].value])
-                                    //     };
-                                    // })
                                 })
 
                         }
@@ -547,15 +534,40 @@ class App extends Component {
                                 }
                             },
                             data:[]
-
-                            //data: [item]
-                            // data: item[1].map(function (dataItem) {
-                            //     return {
-                            //         name: dataItem[1].name,
-                            //         value: geoCoordMap[dataItem[1].name].concat([dataItem[1].value])
-                            //     };
-                            // })
                         })
+                }
+                if(this.state.arrivalStation!=''&&this.state.departureStation!=''){
+                    var departureValue = this.state.value.find(x => x.name == this.state.departureStation)
+                    var arrivalValue = this.state.value.find(y => y.name == this.state.arrivalStation)
+                    console.log(departureValue.value)
+                    series.push(
+                        {
+                            //name: item[0] + ' Top10',
+                            type: 'lines',
+                            zlevel: 2,
+                            symbol: ['none', 'arrow'],
+                            symbolSize: 10,
+                            effect: {
+                                show: true,
+                                period: 6,
+                                trailLength: 0,
+                                symbol: trainPath,
+                                symbolSize: 15
+                            },
+                            lineStyle: {
+                                normal: {
+                                    color: '#000',
+                                    width: 1,
+                                    opacity: 0.6,
+                                    curveness: 0.2
+                                }
+                            },
+                            data:[{fromName:departureValue.name,toName:arrivalValue.name,coords:[departureValue.value,arrivalValue.value]}]
+                        },
+                            
+                            
+                        )
+
                 }
                 
                 
@@ -572,7 +584,16 @@ class App extends Component {
                 }
             },
             tooltip: {
-                trigger: 'item'
+                backgroundColor:'rgba(255,255,255,0.7)',
+                borderWidth:1,
+                borderRadius:5,
+                textStyle:{
+                    color:'#000'
+                },
+                trigger: 'item',
+                formatter: (param)=>{
+                    return "Station Name: "+param.name
+                }
             },
             
             geo: {
@@ -646,11 +667,19 @@ class App extends Component {
         console.log("zoom: ",data)
     }
     handleBudgetChange(event) {
+        var center = this.echarts_react.getEchartsInstance().getOption().geo[0].center
+        var zoom = this.echarts_react.getEchartsInstance().getOption().geo[0].zoom
+        this.setState({center: center})
+        this.setState({zoom: zoom})
         this.setState({ budget: event.target.value });
     }
     handleTravelTimeChange(event) {
+        var center = this.echarts_react.getEchartsInstance().getOption().geo[0].center
+        var zoom = this.echarts_react.getEchartsInstance().getOption().geo[0].zoom
+        this.setState({center: center})
+        this.setState({zoom: zoom})
         if(event.target.value==''){
-            this.setState({ travelTime: 999999 });
+            this.setState({ travelTime: "99:00" });
         }
         else{
         this.setState({ travelTime: event.target.value });
@@ -677,6 +706,7 @@ class App extends Component {
             'dataZoom': this.onDataZoom
         }
         return (
+            
             <div className='examples' style={divStyle}>
 
 
@@ -708,11 +738,14 @@ class App extends Component {
 
                     </div>
                 </div>
+                <div style={{ position: 'absolute', left: 30, bottom: 30, zIndex: 15}} >
+                
+                </div>
                 {this.state.showTrain.length>0?(
-                    <div className='train' style={{ position: 'absolute', right: 30, bottom: 30, zIndex: 15}} >
-                    <div style={{backgroundColor:'#f0f5f9',marginRight:60,height:150,width:300, border:1, font:16/26, overflow:'auto'}}>
+                    <div style={{ position: 'absolute', right: 30, bottom: 30, zIndex: 15}} >
+                    <div style={{backgroundColor:'#f0f5f9',marginRight:60,height:150,width:400, border:1, font:16/26, overflow:'auto'}}>
                     
-                    <table style={{borderWidth:1}}>
+                    <table style={{borderCollapse:'collapse'}}>
                     <thead>
                     <tr>
                         {/* <th>Departure Station</th>
@@ -731,7 +764,7 @@ class App extends Component {
                         
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody style={{marginTop:10}}>
                         {this.state.showTrain.map(showTrain => (
                             
                            
@@ -759,5 +792,6 @@ const divStyle = {
     alignItems: 'center',
     padding: 0,
     margin: 0
-};
+}
+
 export default App;
