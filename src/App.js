@@ -24,7 +24,7 @@ class App extends Component {
             shanghainan_all: [],
             shanghainan_hangzhou: [{}],
             value: [{}],
-            showStation: [{}],
+            showStation: [],
             showTrain: [],
             allStation_to_allStation: alldata.allStation_to_allStation
         }
@@ -80,7 +80,9 @@ class App extends Component {
         }
 
     }
-    calculateStations(departureStation) {//用户点击了出发城市，触发这个function
+    calculateStations(departureStation) {
+        
+        //用户点击了出发城市，触发这个function
         //console.log(this.state.shanghainan_all)
         var reachableStations = [{}]    //根据计算预算和时间后可以到达的城市
         var originStationCoords = this.state.value.find(x => x.name === departureStation)
@@ -190,31 +192,26 @@ class App extends Component {
     renderList(showTrain) {
         return (
             
-            <div style={{backgroundColor:'#f0f5f9' }}>
-                <table style={{marginLeft:30}}>
-                    <thead>
+            
                     <tr>
-                        <th>Train</th>
-                        <th>{showTrain.train_number}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Start Time</td>
+                    <td>{this.state.departureStation}</td>
+                    <td>{this.state.arrivalStation}</td>
+                    <td>{showTrain.train_number}</td>
+                        
                         <td>{showTrain.start_time}</td>
-                    </tr>
                     
-                    <tr>
-                        <td>Arrive Time</td>
+                    
+                    
+                        
                         <td>{showTrain.arrive_time}</td>
-                    </tr>
-                    <tr>
-                        <td>Price</td>
+                    
+                    
+                       
                         <td>{'¥'+showTrain.price}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+                        </tr>
+                    
+                    
+                
            
         );
     }
@@ -398,12 +395,21 @@ class App extends Component {
             return res;
         };
 
-        const color = ['#a6c84c', '#ffa022', '#46bee9'];
+        const renderColor = ()=>{
+            console.log("times")
+            
+            return "#52616b"
+        }
+        const color = ['#000000', '#ffffff', '#52616b'];
         const series = [];
-        [['北京', BJData], ['上海', SHData], ['广州', GZData]].forEach((item, i) => {
+        
+        
+
+        
+            //console.log("item.name:",item.name)
             series.push(
                 {
-                    name: item[0],
+                    
                     type: 'effectScatter',
                     coordinateSystem: 'geo',
                     zlevel: 1,
@@ -420,7 +426,8 @@ class App extends Component {
                     symbolSize: 10,
                     itemStyle: {
                         normal: {
-                            color: color[i]
+                            
+                            color: renderColor()
                         }
                     },
                     data: this.state.showStation
@@ -430,11 +437,93 @@ class App extends Component {
                     //         value: geoCoordMap[dataItem[1].name].concat([dataItem[1].value])
                     //     };
                     // })
-                });
-        });
+                })
+                if(this.state.departureStation!=''){
+                    this.state.showStation.forEach((item,index)=>{
+                        if(item.name==this.state.departureStation){
+                            console.log("nmsl",item)
+                            series.push(
+                                {
+                                    
+                                    type: 'effectScatter',
+                                    coordinateSystem: 'geo',
+                                    zlevel: 2,
+                                    rippleEffect: {
+                                        brushType: 'stroke'
+                                    },
+                                    label: {
+                                        normal: {
+                                            show: true,
+                                            position: 'right',
+                                            formatter: '{b}'
+                                        }
+                                    },
+                                    symbolSize: 10,
+                                    itemStyle: {
+                                        normal: {
+                                            
+                                            color: "#00adb5"
+                                        }
+                                    },
+                                    data: [item]
+                                    // data: item[1].map(function (dataItem) {
+                                    //     return {
+                                    //         name: dataItem[1].name,
+                                    //         value: geoCoordMap[dataItem[1].name].concat([dataItem[1].value])
+                                    //     };
+                                    // })
+                                })
 
+                        }
+                    })
+
+                }
+                if(this.state.arrivalStation!=''){
+                    this.state.showStation.forEach((item,index)=>{
+                        if(item.name==this.state.arrivalStation){
+                            console.log("nmsl",item)
+                            series.push(
+                                {
+                                    
+                                    type: 'effectScatter',
+                                    coordinateSystem: 'geo',
+                                    zlevel: 2,
+                                    rippleEffect: {
+                                        brushType: 'stroke'
+                                    },
+                                    label: {
+                                        normal: {
+                                            show: true,
+                                            position: 'right',
+                                            formatter: '{b}'
+                                        }
+                                    },
+                                    symbolSize: 10,
+                                    itemStyle: {
+                                        normal: {
+                                            
+                                            color: "#ff5722"
+                                        }
+                                    },
+                                    data: [item]
+                                    // data: item[1].map(function (dataItem) {
+                                    //     return {
+                                    //         name: dataItem[1].name,
+                                    //         value: geoCoordMap[dataItem[1].name].concat([dataItem[1].value])
+                                    //     };
+                                    // })
+                                })
+
+                        }
+                    })
+
+                }
+                
+                
+            console.log("initialize:",series)
+            
         const option = {
-            backgroundColor: '#404a59',
+            backgroundColor: '#a8d8ea',
             title: {
                 text: 'Train Stations',
                 subtext: 'CSE184 final project',
@@ -468,11 +557,11 @@ class App extends Component {
                 roam: true,
                 itemStyle: {
                     normal: {
-                        areaColor: '#323c48',
+                        areaColor: '#f0f5f9',
                         borderColor: '#404a59'
                     },
                     emphasis: {
-                        areaColor: '#2a333d'
+                        areaColor: '#c9d6df'
                     }
                 }
             },
@@ -485,7 +574,7 @@ class App extends Component {
         if (this.state.clicked == false) {
             try {
                 console.log('First station:', param.data.name)
-
+                console.log('color station:', this.echarts_react)
                 this.calculateStations(param.data.name)
 
             } catch (error) {
@@ -496,7 +585,7 @@ class App extends Component {
             //second click
             try {
                 console.log('Second station:', param.data.name)
-
+                //console.log('series length:', series.length)
                 this.calculatePath(param.data.name)
 
             } catch (error) {
@@ -561,16 +650,46 @@ class App extends Component {
 
                     </div>
                 </div>
-                <div className='train' style={{ position: 'absolute', right: 30, bottom: 30, zIndex: 15}} >
-                    <div style={{marginRight:60,height:300,width:235, border:1, font:16/26, overflow:'auto'}}>
+                {this.state.showTrain.length>0?(
+                    <div className='train' style={{ position: 'absolute', right: 30, bottom: 30, zIndex: 15}} >
+                    <div style={{backgroundColor:'#f0f5f9',marginRight:60,height:150,width:600, border:1, font:16/26, overflow:'auto'}}>
                     
+                    <table style={{borderWidth:1}}>
+                    <thead>
+                    <tr>
+                        <th>Departure Station</th>
+                        
+                    
+                        <th>Arrival Station</th>
+                        
+                    
+                        <th>Train</th>
+
+                        <th>Start Time</th>
+
+                        <th>Arrival Time</th>
+
+                        <th>Price</th>
+                        
+                    </tr>
+                    </thead>
+                    <tbody>
                         {this.state.showTrain.map(showTrain => (
-                            <div key={`${showTrain.start_time}`}>
-                                    {this.renderList(showTrain)}
-                            </div>
+                            
+                           
+                                
+                                    this.renderList(showTrain)
+                                    
+                            
+                            
                                 ))}
+                                </tbody>
+                                </table>
+                                    </div>
                     </div>
-                </div>
+               
+                ):null}
+                
             </div>
         );
     }
