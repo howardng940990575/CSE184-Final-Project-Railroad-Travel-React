@@ -179,6 +179,9 @@ class App extends Component {
         console.log("second click")
 
         var departureStation_to_allStations = this.state.allStation_to_allStation.find(x => x.id == this.state.departureStation)
+        var departureStation_to_arrivalStation = departureStation_to_allStations.eachStation_to_allStation_data.find(x => x.id == "Lianyungang")
+
+        var departureStation_to_allStations = this.state.allStation_to_allStation.find(x => x.id == this.state.departureStation)
         var departureStation_to_arrivalStation = departureStation_to_allStations.eachStation_to_allStation_data.find(x => x.id == this.state.arrivalStation)
         console.log(departureStation_to_arrivalStation.eachStation_to_eachStation_data)
         for (var i = 0; i < departureStation_to_arrivalStation.eachStation_to_eachStation_data.price.length; i++) {
@@ -186,6 +189,9 @@ class App extends Component {
             var rawTravelTime = this.state.travelTime.split(":")
             var neededTime = this.convertTimeToMin(rawNeededTime)
             var travelTime = this.convertTimeToMin(rawTravelTime)
+            console.log(this.state.departureStation,this.state.arrivalStation);
+            console.log("time_needed:",departureStation_to_arrivalStation.eachStation_to_eachStation_data.time_needed[i])
+            console.log("price:",departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i])
             if (departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] <= this.state.budget && neededTime <= travelTime && departureStation_to_arrivalStation.eachStation_to_eachStation_data.price[i] > 0) { //如果价钱低于预算且需时低于旅游时间
                 availableTrain.push({
                     train_number: departureStation_to_arrivalStation.eachStation_to_eachStation_data.train_number[i],
@@ -204,6 +210,10 @@ class App extends Component {
     }
 
     renderList(showTrain) {
+        var dateobj = new Date()
+        dateobj.setDate(dateobj.getDate()+3)
+        var link = "https://us.trip.com/trains/china/list?DepartureStation="+this.state.departureStation.replace(' ', '+')+ "&ArrivalStation="+this.state.arrivalStation.replace(' ', '+')+"&DepartDate="+dateobj.getFullYear()+'-'+(dateobj.getMonth()+1)+'-'+(dateobj.getDate())+"&TrainNumber="+showTrain.train_number
+        console.log(link)
         return (
             <TableRow key={showTrain.start_time}>
               <TableCell align="center" component="th" scope="row">
@@ -212,7 +222,7 @@ class App extends Component {
               <TableCell align="center">{showTrain.start_time}</TableCell>
               <TableCell align="center">{showTrain.arrive_time}</TableCell>
               <TableCell align="center">{showTrain.price}</TableCell>
-              
+              <TableCell align="center"><td><a href={link}>Click here</a></td></TableCell>
             </TableRow>
         );
     }
@@ -558,7 +568,7 @@ class App extends Component {
         const option = {
             backgroundColor: '#a8d8ea',
             title: {
-                text: 'Train Stations in China',
+                text: 'China Rail Travel Planner\nBy: Tongze Wang, Zhaoheng Chen, Howard Ng',
 
                 left: 'center',
                 textStyle: {
@@ -741,8 +751,9 @@ class App extends Component {
                                     <TableRow>
                                         <TableCell align="center" style={{color:'#fff'}}>Train Number:</TableCell>
                                         <TableCell align="center" style={{color:'#fff'}}>Start Time:</TableCell>
-                                        <TableCell align="center" style={{color:'#fff'}}>arrival Time:</TableCell>
+                                        <TableCell align="center" style={{color:'#fff'}}>Arrival Time:</TableCell>
                                         <TableCell align="center" style={{color:'#fff'}}>Price(¥)</TableCell>
+                                        <TableCell align="center" style={{color:'#fff'}}>Buy Ticket:</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
