@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/CSE184-Final-Project-Railroad-Travel-React/precache-manifest.40b47ccbd2332eed18735faa0c0073a9.js"
+  "/CSE184-Final-Project-Railroad-Travel-React/precache-manifest.9c7ee5360b921e63e86454b6b829030e.js"
 );
 
 self.addEventListener('message', (event) => {
