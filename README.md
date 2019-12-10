@@ -9,7 +9,7 @@ The code for the webpage was under the directory<br />
 
 If you want to run the code, you’ll need to have Node >= 8.10 and npm >= 5.6 on your machine.<br />
 
-npm install
+npm install<br />
 npm start
 
 ### `ipynb`
