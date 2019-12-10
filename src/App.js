@@ -744,7 +744,7 @@ class App extends Component {
                     <div style={{ position: 'absolute',marginRight:60, right: 30, bottom: 30, zIndex: 15 }} >
                         <Typography variant="h6" component="h6" align="right">{"Departure Station: "+this.state.departureStation}</Typography>
                         <Typography variant="h6" component="h6" align="right">{"Arrival Station: "+this.state.arrivalStation}</Typography>
-                        <div style={{backgroundColor:'#f0f5f9',height:400,width:500, border:1, font:16/26, overflow:'auto'}}>
+                        <div style={{backgroundColor:'#f0f5f9',height:150,width:500, border:1, font:16/26, overflow:'auto'}}>
                         <Paper >
                             <Table  aria-label="customized table">
                                 <TableHead style={{backgroundColor:"#52616b"}}>
