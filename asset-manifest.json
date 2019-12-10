@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "/CSE184-Final-Project-Railroad-Travel-React/static/css/main.34de6062.chunk.css",
-    "main.js": "/CSE184-Final-Project-Railroad-Travel-React/static/js/main.323a976f.chunk.js",
-    "main.js.map": "/CSE184-Final-Project-Railroad-Travel-React/static/js/main.323a976f.chunk.js.map",
+    "main.css": "/CSE184-Final-Project-Railroad-Travel-React/static/css/main.498d002a.chunk.css",
+    "main.js": "/CSE184-Final-Project-Railroad-Travel-React/static/js/main.d1fe6c0a.chunk.js",
+    "main.js.map": "/CSE184-Final-Project-Railroad-Travel-React/static/js/main.d1fe6c0a.chunk.js.map",
     "runtime-main.js": "/CSE184-Final-Project-Railroad-Travel-React/static/js/runtime-main.88db8aaa.js",
     "runtime-main.js.map": "/CSE184-Final-Project-Railroad-Travel-React/static/js/runtime-main.88db8aaa.js.map",
-    "static/js/2.76fdbcf2.chunk.js": "/CSE184-Final-Project-Railroad-Travel-React/static/js/2.76fdbcf2.chunk.js",
-    "static/js/2.76fdbcf2.chunk.js.map": "/CSE184-Final-Project-Railroad-Travel-React/static/js/2.76fdbcf2.chunk.js.map",
+    "static/js/2.24a2c926.chunk.js": "/CSE184-Final-Project-Railroad-Travel-React/static/js/2.24a2c926.chunk.js",
+    "static/js/2.24a2c926.chunk.js.map": "/CSE184-Final-Project-Railroad-Travel-React/static/js/2.24a2c926.chunk.js.map",
     "index.html": "/CSE184-Final-Project-Railroad-Travel-React/index.html",
-    "precache-manifest.2a00064bd61f03c76e3161dc7b7a9464.js": "/CSE184-Final-Project-Railroad-Travel-React/precache-manifest.2a00064bd61f03c76e3161dc7b7a9464.js",
+    "precache-manifest.c3c474a17bf6be676d6d2f9cdef2e83a.js": "/CSE184-Final-Project-Railroad-Travel-React/precache-manifest.c3c474a17bf6be676d6d2f9cdef2e83a.js",
     "service-worker.js": "/CSE184-Final-Project-Railroad-Travel-React/service-worker.js",
-    "static/css/main.34de6062.chunk.css.map": "/CSE184-Final-Project-Railroad-Travel-React/static/css/main.34de6062.chunk.css.map"
+    "static/css/main.498d002a.chunk.css.map": "/CSE184-Final-Project-Railroad-Travel-React/static/css/main.498d002a.chunk.css.map"
   },
   "entrypoints": [
     "static/js/runtime-main.88db8aaa.js",
-    "static/js/2.76fdbcf2.chunk.js",
-    "static/css/main.34de6062.chunk.css",
-    "static/js/main.323a976f.chunk.js"
+    "static/js/2.24a2c926.chunk.js",
+    "static/css/main.498d002a.chunk.css",
+    "static/js/main.d1fe6c0a.chunk.js"
   ]
 }
